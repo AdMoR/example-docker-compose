@@ -1,0 +1,32 @@
+version: '2.0'
+services:
+  web:
+    build: 
+      context: .
+      dockerfile: my_service/server/Dockerfile
+    ports:
+    - "5000:5000"
+    volumes:
+    - .:/code
+    - logvolume01:/var/log
+    links:
+    - redis
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+  worker:
+    build: 
+      context: .
+      dockerfile: my_service/worker/Dockerfile
+    volumes:
+    - .:/code
+    - logvolume01:/var/log
+    links:
+    - redis
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+  redis:
+    image: redis
+volumes:
+  logvolume01: {}
